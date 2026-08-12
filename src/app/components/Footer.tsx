@@ -1,18 +1,14 @@
 import { Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
+import Logo from './Logo';
 
 export default function Footer() {
   return (
-    <footer className="bg-[#0D1B3E]/95 backdrop-blur-xl text-white pt-16 pb-8 border-t border-white/10">
+    <footer className="bg-navy/95 backdrop-blur-xl text-white pt-16 pb-8 border-t border-white/10">
       <div className="max-w-[1280px] mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* Column 1 - Logo & Tagline */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-lg bg-[#1B4FCC] flex items-center justify-center">
-                <span className="text-white font-bold" style={{ fontSize: '16px' }}>US</span>
-              </div>
-              <span className="font-bold" style={{ fontSize: '18px' }}>Ummah Square</span>
-            </div>
+            <Logo tone="light" size={36} />
             <p className="text-white/70" style={{ fontSize: '14px', lineHeight: '1.6' }}>
               Nigeria's premier marketplace for verified Muslim-owned businesses.
             </p>
@@ -67,7 +63,7 @@ export default function Footer() {
               <p className="text-white/70" style={{ fontSize: '13px', lineHeight: '1.5' }}>
                 Join hundreds of verified Muslim-owned businesses on our platform.
               </p>
-              <button className="w-full px-6 py-3 bg-[#1B4FCC] hover:bg-[#1640b0] text-white rounded-full transition-colors" style={{ fontSize: '14px', fontWeight: '600' }}>
+              <button className="w-full px-6 py-3 bg-brand hover:bg-brand-strong text-white rounded-full transition-colors" style={{ fontSize: '14px', fontWeight: '600' }}>
                 Get Started
               </button>
             </div>

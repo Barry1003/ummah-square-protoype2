@@ -1,84 +1,175 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  /* ─────────────────────────────────────────────────────────────
+     UMMAH SQUARE BRAND PALETTE — single source of truth.
+
+     Derived from the logo itself (src/assets/ummah-square-logo.svg):
+       #374CA0  gradient start — the deep indigo in the mark
+       #65A1D7  gradient end   — the mid sky blue
+       #77ADDE  flat fill      — the light sky blue
+
+     Everything below (shadcn semantics + Tailwind utilities) is
+     derived from these. Change the brand here, not in components.
+     ───────────────────────────────────────────────────────────── */
+
+  /* Primary — the logo's deep indigo */
+  --brand: #374ca0;
+  --brand-strong: #2a3a7d; /* hover / pressed */
+  --brand-mid: #65a1d7; /* logo gradient end */
+  --brand-light: #77adde; /* logo flat fill */
+  --brand-soft: #eef3fb; /* section wash, tinted toward the mark */
+  /* The mark's own gradient, for primary CTAs and emphasis fills */
+  --brand-gradient: linear-gradient(135deg, #374ca0 0%, #65a1d7 100%);
+
+  /* Secondary — warm gold, retuned to sit against the logo blues.
+     Used sparingly: badges, "Top Rated", sponsored labels. */
+  --gold: #d9a227;
+  --gold-strong: #b8851a;
+  --gold-soft: #fbf2de;
+
+  /* Deep navy — footer and dark sections, the brand indigo taken down */
+  --navy: #141c3d;
+  --navy-soft: #1e2a55;
+
+  /* Success / trust — verified badges only */
+  --success: #1f7a55;
+  --success-soft: #e7f3ed;
+
+  /* Text ramp — carries a slight blue cast so it sits with the mark */
+  --ink: #111725; /* headings */
+  --body-text: #4a5163; /* body copy */
+  --meta: #858c9c; /* metadata, captions */
+
+  /* Surfaces — cool off-white rather than the old warm one */
+  --surface: #ffffff;
+  --surface-alt: #f6f8fc;
+  --hairline: #e6eaf2;
+
+  /* Elevation — subtle, tinted with the brand rather than flat black */
+  --shadow-card: 0 4px 24px rgba(17, 23, 37, 0.07);
+  --shadow-card-hover: 0 8px 32px rgba(17, 23, 37, 0.12);
+  --shadow-brand: 0 8px 32px rgba(55, 76, 160, 0.22);
+
+  /* ── shadcn semantic tokens, mapped onto the brand above ── */
   --font-size: 16px;
-  --background: #ffffff;
-  --foreground: #111111;
-  --card: #ffffff;
-  --card-foreground: #111111;
-  --popover: #ffffff;
-  --popover-foreground: #111111;
-  --primary: #1B4FCC;
+  --background: var(--surface);
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface);
+  --popover-foreground: var(--ink);
+  --primary: var(--brand);
   --primary-foreground: #ffffff;
-  --secondary: #D4A017;
+  --secondary: var(--gold);
   --secondary-foreground: #ffffff;
-  --muted: #F8F8F6;
-  --muted-foreground: #888888;
-  --accent: #D4A017;
-  --accent-foreground: #ffffff;
+  --muted: var(--surface-alt);
+  --muted-foreground: var(--meta);
+  /* NOTE: shadcn uses `accent` for hover/active surfaces (dropdown items,
+     ghost buttons). It must stay a quiet wash — gold belongs on `secondary`. */
+  --accent: var(--brand-soft);
+  --accent-foreground: var(--brand);
   --destructive: #d4183d;
   --destructive-foreground: #ffffff;
-  --border: #EEEEEE;
+  --border: var(--hairline);
   --input: transparent;
   --input-background: #f3f3f5;
   --switch-background: #cbced4;
   --font-weight-medium: 600;
   --font-weight-normal: 400;
-  --ring: #1B4FCC;
-  --chart-1: #1B4FCC;
-  --chart-2: #D4A017;
-  --chart-3: #1A7A4A;
-  --chart-4: #0D1B3E;
-  --chart-5: #EEF3FF;
+  --ring: var(--brand);
+  --chart-1: var(--brand);
+  --chart-2: var(--gold);
+  --chart-3: var(--success);
+  --chart-4: var(--navy);
+  --chart-5: var(--brand-soft);
   --radius: 1rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: #111111;
-  --sidebar-primary: #1B4FCC;
+  --sidebar: var(--surface-alt);
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--brand);
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #F8F8F6;
-  --sidebar-accent-foreground: #111111;
-  --sidebar-border: #EEEEEE;
-  --sidebar-ring: #1B4FCC;
+  --sidebar-accent: var(--brand-soft);
+  --sidebar-accent-foreground: var(--brand);
+  --sidebar-border: var(--hairline);
+  --sidebar-ring: var(--brand);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --font-weight-medium: 500;
+  /* Dark mode keeps the brand identity — blue stays blue, gold stays gold.
+     (The default shadcn dark theme flips primary to white, which erases it.) */
+  --brand: #7fa9e0; /* the logo's light blue leads in dark mode */
+  --brand-strong: #9dc0ea;
+  --brand-mid: #65a1d7;
+  --brand-light: #77adde;
+  --brand-soft: #1a2444;
+  --brand-gradient: linear-gradient(135deg, #4a63bd 0%, #77adde 100%);
+  --gold: #e5b93c;
+  --gold-strong: #f2cb5e;
+  --gold-soft: #2a2415;
+  --success: #3aa877;
+  --success-soft: #16301f;
+  --ink: #f4f6fb;
+  --body-text: #c2c8d6;
+  --meta: #868da0;
+  --surface: #0b1122;
+  --surface-alt: #121a30;
+  --hairline: #24304d;
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --shadow-card-hover: 0 8px 32px rgba(0, 0, 0, 0.55);
+  --shadow-brand: 0 8px 32px rgba(127, 169, 224, 0.25);
+
+  --background: var(--surface);
+  --foreground: var(--ink);
+  --card: var(--surface-alt);
+  --card-foreground: var(--ink);
+  --popover: var(--surface-alt);
+  --popover-foreground: var(--ink);
+  --primary: var(--brand);
+  --primary-foreground: #0B1224;
+  --secondary: var(--gold);
+  --secondary-foreground: #0B1224;
+  --muted: var(--surface-alt);
+  --muted-foreground: var(--meta);
+  --accent: var(--brand-soft);
+  --accent-foreground: var(--brand);
+  --destructive: #e2536f;
+  --destructive-foreground: #0B1224;
+  --border: var(--hairline);
+  --input: var(--hairline);
+  --ring: var(--brand);
+  --font-weight-medium: 600;
   --font-weight-normal: 400;
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  --sidebar: var(--surface-alt);
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--brand);
+  --sidebar-primary-foreground: #0B1224;
+  --sidebar-accent: var(--brand-soft);
+  --sidebar-accent-foreground: var(--brand);
+  --sidebar-border: var(--hairline);
+  --sidebar-ring: var(--brand);
 }
 
 @theme inline {
+  /* Brand utilities — bg-brand, text-gold, border-hairline, bg-brand-soft … */
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-mid: var(--brand-mid);
+  --color-brand-light: var(--brand-light);
+  --color-brand-soft: var(--brand-soft);
+  --color-gold: var(--gold);
+  --color-gold-strong: var(--gold-strong);
+  --color-gold-soft: var(--gold-soft);
+  --color-navy: var(--navy);
+  --color-navy-soft: var(--navy-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-ink: var(--ink);
+  --color-body-text: var(--body-text);
+  --color-meta: var(--meta);
+  --color-surface: var(--surface);
+  --color-surface-alt: var(--surface-alt);
+  --color-hairline: var(--hairline);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -105,6 +196,10 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+  /* shadow-card, shadow-card-hover, shadow-brand */
+  --shadow-card: var(--shadow-card);
+  --shadow-card-hover: var(--shadow-card-hover);
+  --shadow-brand: var(--shadow-brand);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);

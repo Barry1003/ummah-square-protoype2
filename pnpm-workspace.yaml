@@ -1,2 +1,7 @@
 packages:
   - '.'
+
+# Native binaries whose install scripts must run for `vite build` to work.
+allowBuilds:
+  '@tailwindcss/oxide': true
+  esbuild: true

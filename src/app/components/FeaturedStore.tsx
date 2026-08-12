@@ -1,176 +1,169 @@
-import { Star } from 'lucide-react';
+import { useState } from 'react';
+import { Link } from 'react-router';
+import { ArrowRight } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
+import { formatNaira } from '../lib/format';
+import { STORES, getStoreAvatar, getStoreBanner, getStoreProductCount, getStoreProducts } from '../data/catalog';
 
+/** Vendors that rotate through the spotlight — the dots below switch between them. */
+const FEATURED_IDS = ['pleaznscents', 'feescrochet', 'zerostore'];
+
+/** One responsive layout from 375px up — no separate mobile and desktop trees. */
 export default function FeaturedStore() {
-  const products = [
-    { name: 'Elegant Hijab Set', price: '₦15,000', image: 'https://images.unsplash.com/photo-1668028554854-245f8ccae15b?w=400' },
-    { name: 'Modest Abaya', price: '₦25,000', image: 'https://images.unsplash.com/photo-1668028563825-f3b7138db3de?w=400' },
-    { name: 'Premium Khimar', price: '₦18,000', image: 'https://images.unsplash.com/photo-1668028554553-f83cac89ce0f?w=400' },
-  ];
+  const [index, setIndex] = useState(0);
+
+  const featured = FEATURED_IDS.map(id => STORES.find(store => store.id === id)).filter(Boolean) as typeof STORES;
+  const store = featured[index];
+  const products = getStoreProducts(store.id).slice(0, 3);
+  const avatar = getStoreAvatar(store);
 
   return (
-    <section className="bg-[#1B4FCC] py-16">
+    <section className="bg-surface-alt py-16 border-y border-hairline">
       <div className="max-w-[1280px] mx-auto px-6">
-        {/* Desktop Label - Hidden on Mobile */}
-        <div className="hidden lg:block text-[#D4A017] mb-6 tracking-wider" style={{ fontSize: '12px', fontWeight: '600', letterSpacing: '1.5px' }}>
-          FEATURED STORE
+        <div className="flex items-end justify-between mb-8 gap-4">
+          <div>
+            <span
+              className="block text-meta uppercase mb-2"
+              style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '1.1px' }}
+            >
+              Featured store
+            </span>
+            <h2 className="text-ink" style={{ fontSize: '30px', fontWeight: 700 }}>
+              In the spotlight
+            </h2>
+          </div>
+
+          <Dots count={featured.length} active={index} onSelect={setIndex} />
         </div>
 
-        {/* Mobile Layout - Shows only on screens < 1024px */}
-        <div className="lg:hidden mx-auto" style={{ maxWidth: '375px' }}>
-         <div className="mx-4 rounded-2xl overflow-hidden"
-            style={{
-              background: 'linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.06) 100%)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-              border: '1px solid rgba(255,255,255,0.25)',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.2)',
-            }}>
-            {/* Banner with overlay label */}
-            <div className="relative h-40">
-              <ImageWithFallback
-                src="https://images.unsplash.com/photo-1668028554854-245f8ccae15b?w=800"
-                alt="Store Banner"
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-              <div className="absolute top-3 left-3 text-[#D4A017] tracking-wider" style={{ fontSize: '11px', fontWeight: '600', letterSpacing: '1.5px', textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
-                FEATURED STORE
-              </div>
-              {/* Store Avatar - Overlapping */}
-              <div className="absolute -bottom-7 left-1/2 -translate-x-1/2">
-                <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center border-2 border-white shadow-lg">
-                  <span className="text-white" style={{ fontSize: '20px', fontWeight: '700' }}>AB</span>
-                </div>
-              </div>
-            </div>
+        <article className="rounded-2xl overflow-hidden bg-white border border-hairline grid md:grid-cols-2">
+          {/* Identity */}
+          <div className="relative min-h-[260px] md:min-h-[400px] flex flex-col justify-end p-6 md:p-8">
+            <ImageWithFallback
+              src={getStoreBanner(store)}
+              alt={store.name}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            <div
+              className="absolute inset-0"
+              style={{ background: 'linear-gradient(to top, rgba(17,23,37,0.92) 0%, rgba(17,23,37,0.45) 60%, rgba(17,23,37,0.2) 100%)' }}
+            />
 
-            {/* Card Body */}
-            <div className="pt-10 px-4 pb-5 space-y-4">
-              <div className="text-center">
-                <h2 className="text-white mb-2" style={{ fontSize: '18px', fontWeight: '700' }}>Aisha's Boutique</h2>
-                <div className="flex items-center justify-center gap-3 mb-2">
-                  <div className="inline-block px-3 py-1 bg-[#D4A017] rounded-full text-white" style={{ fontSize: '11px', fontWeight: '600' }}>
-                    Fashion & Clothing
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <div className="flex items-center gap-0.5">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} size={12} className="fill-[#D4A017] text-[#D4A017]" />
-                      ))}
-                    </div>
-                    <span className="text-[#888888]" style={{ fontSize: '11px' }}>(248)</span>
-                  </div>
-                </div>
-                <p className="text-white/70 italic max-w-[280px] mx-auto truncate" style={{ fontSize: '13px' }}>
-                  Premium modest fashion for the modern Muslim woman
+            <div className="relative">
+              <span className="w-14 h-14 rounded-xl overflow-hidden bg-white block mb-4 border border-white/30">
+                {avatar ? (
+                  <ImageWithFallback src={avatar} alt="" className="w-full h-full object-cover" />
+                ) : (
+                  <span
+                    className="w-full h-full bg-ink flex items-center justify-center text-white"
+                    style={{ fontSize: '16px', fontWeight: 700 }}
+                  >
+                    {store.initials}
+                  </span>
+                )}
+              </span>
+
+              {store.topRated && (
+                <span
+                  className="block text-gold uppercase mb-1.5"
+                  style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.9px' }}
+                >
+                  Top Rated
+                </span>
+              )}
+
+              <h3 className="text-white mb-2" style={{ fontSize: '26px', fontWeight: 700, lineHeight: 1.2 }}>
+                {store.name}
+              </h3>
+
+              <p className="text-white/70 mb-4" style={{ fontSize: '13px' }}>
+                {store.category} · {store.location}
+              </p>
+
+              {store.tagline && (
+                <p className="text-white/85 max-w-[380px] mb-6" style={{ fontSize: '15px', lineHeight: 1.6 }}>
+                  {store.tagline}
                 </p>
-              </div>
+              )}
 
-              {/* Horizontal Scroll Product Thumbnails */}
-              <div className="flex gap-3 overflow-x-auto scrollbar-hide -mx-4 px-4">
-                {products.map((product, index) => (
-                  <div key={index} className="flex-shrink-0" style={{ width: '100px' }}>
-                    <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden mb-2">
-                      <ImageWithFallback
-                        src={product.image}
-                        alt={product.name}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <h4 className="text-white truncate" style={{ fontSize: '12px', fontWeight: '600' }}>{product.name}</h4>
-                    <p className="text-[#D4A017]" style={{ fontSize: '13px', fontWeight: '700' }}>{product.price}</p>
-                  </div>
-                ))}
-              </div>
-
-              {/* Visit Store Button */}
-              <button className="w-full h-12 bg-white text-[#1B4FCC] rounded-full hover:bg-[#1640b0] transition-colors" style={{ fontSize: '15px', fontWeight: '600' }}>
-                Visit Store →
-              </button>
-            </div>
-          </div>
-
-          {/* Pagination Dots - Mobile */}
-          <div className="flex justify-center gap-2 mt-6">
-            <div className="w-2 h-2 bg-white rounded-full"></div>
-            <div className="w-2 h-2 bg-white/30 rounded-full"></div>
-            <div className="w-2 h-2 bg-white/30 rounded-full"></div>
-          </div>
-        </div>
-
-        {/* Desktop Layout - Shows only on screens >= 1024px */}
-        <div className="hidden lg:block">
-          <div className="bg-white/10 backdrop-blur-xl rounded-2xl overflow-hidden border border-white/20">
-            <div className="grid grid-cols-1 lg:grid-cols-[40%_60%]">
-              {/* Left - Store Identity */}
-              <div
-                className="relative p-8 flex flex-col justify-center items-center text-center space-y-4"
-                style={{
-                  backgroundImage: 'linear-gradient(rgba(13, 27, 62, 0.85), rgba(13, 27, 62, 0.85)), url(https://images.unsplash.com/photo-1668028554854-245f8ccae15b?w=800)',
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                }}
+              <Link
+                to={`/store/${store.id}`}
+                className="group inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-ink transition-all hover:gap-3"
+                style={{ fontSize: '15px', fontWeight: 600 }}
               >
-                <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-xl border-4 border-white">
-                  <span className="text-white" style={{ fontSize: '32px', fontWeight: '700' }}>AB</span>
-                </div>
-                <div>
-                  <h2 className="text-white mb-2" style={{ fontSize: '32px', fontWeight: '700' }}>Aisha's Boutique</h2>
-                  <div className="inline-block px-4 py-1.5 bg-[#D4A017] rounded-full text-white mb-2" style={{ fontSize: '13px', fontWeight: '600' }}>
-                    Fashion & Clothing
-                  </div>
-                  <p className="text-white/90 italic max-w-[280px] mx-auto" style={{ fontSize: '14px' }}>
-                    "Premium modest fashion for the modern Muslim woman"
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} size={16} className="fill-[#D4A017] text-[#D4A017]" />
-                    ))}
-                  </div>
-                  <span className="text-white/80" style={{ fontSize: '13px' }}>(248 reviews)</span>
-                </div>
-                <button className="px-8 py-3 bg-white text-[#1B4FCC] rounded-full hover:bg-gray-100 transition-colors" style={{ fontSize: '15px', fontWeight: '600' }}>
-                  Visit Store →
-                </button>
-              </div>
-
-              {/* Right - Product Preview */}
-              <div className="bg-white/5 p-8">
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  {products.map((product, index) => (
-                    <div key={index} className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
-                      <div className="aspect-square bg-gray-100">
-                        <ImageWithFallback
-                          src={product.image}
-                          alt={product.name}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <div className="p-3 space-y-1">
-                        <h4 className="text-[#111111]" style={{ fontSize: '14px', fontWeight: '600' }}>{product.name}</h4>
-                        <p className="text-[#1B4FCC]" style={{ fontSize: '16px', fontWeight: '700' }}>{product.price}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-6 text-white/60 text-center" style={{ fontSize: '13px' }}>
-                  12 products available
-                </div>
-              </div>
+                Visit store
+                <ArrowRight size={16} />
+              </Link>
             </div>
           </div>
 
-          {/* Pagination Dots - Desktop */}
-          <div className="flex justify-center gap-2 mt-6">
-            <div className="w-2 h-2 bg-white rounded-full"></div>
-            <div className="w-2 h-2 bg-white/30 rounded-full"></div>
-            <div className="w-2 h-2 bg-white/30 rounded-full"></div>
+          {/* Stock */}
+          <div className="p-6 md:p-8 flex flex-col">
+            <div className="flex items-baseline justify-between mb-5 gap-3">
+              <h4 className="text-ink" style={{ fontSize: '15px', fontWeight: 700 }}>
+                From this store
+              </h4>
+              <Link
+                to={`/store/${store.id}`}
+                className="text-brand hover:underline shrink-0"
+                style={{ fontSize: '13px', fontWeight: 600 }}
+              >
+                All {getStoreProductCount(store.id)} products
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-3 gap-4">
+              {products.map(product => (
+                <Link key={product.id} to={`/store/${store.id}?product=${product.id}`} className="group flex flex-col">
+                  <span className="aspect-square rounded-xl overflow-hidden bg-surface-alt border border-hairline mb-2.5 block">
+                    <ImageWithFallback
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                  </span>
+                  <span
+                    className="text-ink line-clamp-2 mb-1 group-hover:text-brand transition-colors"
+                    style={{ fontSize: '13px', fontWeight: 600, lineHeight: 1.35 }}
+                  >
+                    {product.name}
+                  </span>
+                  <span className="text-ink mt-auto" style={{ fontSize: '14px', fontWeight: 700 }}>
+                    {formatNaira(product.price)}
+                  </span>
+                </Link>
+              ))}
+            </div>
+
+            {store.startingPrice !== undefined && (
+              <div className="mt-auto pt-6 border-t border-hairline flex items-center justify-between gap-3">
+                <span className="text-meta" style={{ fontSize: '13px' }}>
+                  Everything in store from
+                </span>
+                <span className="text-ink" style={{ fontSize: '18px', fontWeight: 700 }}>
+                  {formatNaira(store.startingPrice)}
+                </span>
+              </div>
+            )}
           </div>
-        </div>
+        </article>
       </div>
     </section>
+  );
+}
+
+function Dots({ count, active, onSelect }: { count: number; active: number; onSelect: (index: number) => void }) {
+  return (
+    <div className="flex items-center gap-2 shrink-0 pb-2">
+      {[...Array(count)].map((_, index) => (
+        <button
+          key={index}
+          onClick={() => onSelect(index)}
+          aria-label={`Show featured store ${index + 1}`}
+          aria-current={index === active}
+          className={`h-1.5 rounded-full transition-all ${index === active ? 'w-6 bg-ink' : 'w-1.5 bg-hairline hover:bg-meta'}`}
+        />
+      ))}
+    </div>
   );
 }
