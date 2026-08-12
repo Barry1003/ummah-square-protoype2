@@ -1,12 +1,13 @@
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router';
-import { ArrowRight, MapPin, MessageCircle } from 'lucide-react';
+import { ArrowRight, MapPin } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
 import CategoryPills from '../components/CategoryPills';
 import FeaturedStore from '../components/FeaturedStore';
 import TrendingStores from '../components/TrendingStores';
 import Sponsors from '../components/Sponsors';
+import Services from '../components/Services';
 import Footer from '../components/Footer';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 import { ProductCard } from '../components/store/ProductCard';
@@ -14,7 +15,6 @@ import { VendorCard } from '../components/store/VendorCard';
 import { useCart } from '../lib/cart';
 import {
   CATEGORIES,
-  SERVICES,
   getBestSellers,
   getCategoryProductCount,
   getNewArrivals,
@@ -139,57 +139,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* SERVICES */}
-      <section className="bg-surface-alt py-16">
-        <div className="max-w-[1280px] mx-auto px-6">
-          <SectionHeader title="Need a service?" subtitle="Professional services from trusted providers" action="See all" />
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {SERVICES.map(service => (
-              <article key={service.id} className="bg-white rounded-2xl border border-hairline p-6 transition-shadow duration-300 hover:shadow-[0_8px_30px_rgba(17,23,37,0.08)]">
-                <div className="flex items-start gap-4 mb-4">
-                  <span className="w-12 h-12 rounded-xl overflow-hidden bg-surface-alt border border-hairline shrink-0">
-                    <ImageWithFallback src={service.logo} alt={service.provider} className="w-full h-full object-cover" />
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    {service.topRated && (
-                      <span
-                        className="block text-gold-strong uppercase mb-0.5"
-                        style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.8px' }}
-                      >
-                        Top Rated
-                      </span>
-                    )}
-                    <h3 className="text-ink truncate" style={{ fontSize: '16px', fontWeight: 700 }}>
-                      {service.provider}
-                    </h3>
-                    <p className="text-meta truncate" style={{ fontSize: '13px' }}>
-                      {service.category}
-                    </p>
-                  </div>
-                </div>
-
-                <p className="text-body-text mb-5" style={{ fontSize: '14px', lineHeight: 1.6 }}>
-                  {service.tagline}
-                </p>
-
-                <div className="flex items-center justify-between gap-3 pt-4 border-t border-hairline">
-                  <span className="flex items-center gap-1.5 text-meta truncate" style={{ fontSize: '13px' }}>
-                    {service.available && <span className="w-1.5 h-1.5 rounded-full bg-success shrink-0" />}
-                    {service.location}
-                  </span>
-                  <button
-                    aria-label={`Message ${service.provider}`}
-                    className="w-9 h-9 flex items-center justify-center rounded-full border border-hairline text-meta hover:border-brand hover:text-brand transition-colors shrink-0"
-                  >
-                    <MessageCircle size={15} />
-                  </button>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
+      <Services />
 
       {/* TRUST BAR */}
       <section className="bg-white py-14 border-t border-hairline">

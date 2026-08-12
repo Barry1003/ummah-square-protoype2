@@ -31,12 +31,19 @@ export default function StorePage() {
   const { storeId = '' } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const store = getStore(storeId);
-  const { addItem } = useCart();
+  const { addItem, setCurrentStore } = useCart();
 
   const [activeCategory, setActiveCategory] = useState('All Products');
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState<SortOption>('featured');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+
+  // Tell the cart which shop we're standing in, so the navbar bag and the
+  // drawer scope to this vendor. Cleared on the way out.
+  useEffect(() => {
+    setCurrentStore(storeId);
+    return () => setCurrentStore(null);
+  }, [storeId, setCurrentStore]);
 
   useEffect(() => {
     window.scrollTo(0, 0);

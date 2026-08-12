@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Heart, ShoppingBag } from 'lucide-react';
+import { Heart, ShoppingBag, Star } from 'lucide-react';
 import { ImageWithFallback } from '../figma/ImageWithFallback';
 import { formatNaira } from '../../lib/format';
+import { getProductRating, getReviewCount } from '../../data/reviews';
 import type { Product } from '../../data/types';
 
 interface ProductCardProps {
@@ -20,6 +21,8 @@ interface ProductCardProps {
  */
 export function ProductCard({ product, onOpen, onAddToCart, storeName, storeLogo }: ProductCardProps) {
   const [saved, setSaved] = useState(false);
+  const rating = getProductRating(product.id);
+  const reviewCount = getReviewCount(product.id);
   const badge = product.isNew ? 'NEW' : product.isBestSeller ? 'BESTSELLER' : null;
 
   return (
@@ -63,9 +66,26 @@ export function ProductCard({ product, onOpen, onAddToCart, storeName, storeLogo
           {product.category}
         </span>
 
-        <h3 className="text-ink line-clamp-2 mb-1" style={{ fontSize: '14px', fontWeight: 600, lineHeight: 1.4 }}>
+        <h3 className="text-ink line-clamp-2 mb-1.5" style={{ fontSize: '14px', fontWeight: 600, lineHeight: 1.4 }}>
           {product.name}
         </h3>
+
+        {rating !== null && (
+          <div className="flex items-center gap-1.5 mb-1">
+            <span className="flex items-center gap-0.5" aria-label={`${rating} out of 5 stars`}>
+              {[...Array(5)].map((_, index) => (
+                <Star
+                  key={index}
+                  size={11}
+                  className={index < Math.round(rating) ? 'fill-gold text-gold' : 'text-hairline fill-hairline'}
+                />
+              ))}
+            </span>
+            <span className="text-meta" style={{ fontSize: '11px' }}>
+              {rating.toFixed(1)} ({reviewCount})
+            </span>
+          </div>
+        )}
 
         {storeName && (
           <div className="flex items-center gap-1.5 min-w-0 mb-3">

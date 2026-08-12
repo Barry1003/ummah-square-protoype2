@@ -6,7 +6,11 @@ import Logo from './Logo';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
-  const { itemCount, openCart } = useCart();
+  const { countFor, totalCount, currentStoreId, openCart } = useCart();
+
+  // Inside a shop the bag icon reflects that shop's bag; on marketplace pages
+  // it reflects everything the shopper has open.
+  const itemCount = currentStoreId ? countFor(currentStoreId) : totalCount;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,7 +52,7 @@ export default function Navbar() {
         {/* Actions */}
         <div className="flex items-center gap-4 shrink-0">
           <button
-            onClick={openCart}
+            onClick={() => openCart(currentStoreId)}
             aria-label={`Open cart${itemCount ? ` (${itemCount} items)` : ''}`}
             className="relative p-2 hover:bg-surface-alt rounded-lg transition-colors"
           >
